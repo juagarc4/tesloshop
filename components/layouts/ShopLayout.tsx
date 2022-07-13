@@ -1,7 +1,6 @@
-import { FC } from 'react'
+import { FC, PropsWithChildren } from 'react'
 import Head from 'next/head'
-import { AppProps } from 'next/app'
-import { PropsWithChildren } from 'react'
+import { Navbar } from 'components/ui'
 
 interface Props extends PropsWithChildren<{}> {
   title: string
@@ -23,7 +22,9 @@ const ShopLayout: FC<Props> = ({ children, title, pageDescription, imageFullUrl 
         <meta property='og:url' content='http://localhost' />
         {imageFullUrl && <meta property='og:image' content={imageFullUrl} />}
       </Head>
-      <nav>{/* TODO: Navbar */}</nav>
+      <nav>
+        <Navbar />
+      </nav>
 
       {/*TODO: Sidebar*/}
 
