@@ -9,7 +9,7 @@ interface Props extends PropsWithChildren<{}> {
   // We can use this defintion if we don't want to extend from PropsWithChildren
   // children?: JSX.Element | JSX.Element[];
 }
-const ShopLayout: FC<Props> = ({ children, title, pageDescription, imageFullUrl }) => {
+export const ShopLayout: FC<Props> = ({ children, title, pageDescription, imageFullUrl }) => {
   return (
     <>
       <Head>
@@ -34,5 +34,3 @@ const ShopLayout: FC<Props> = ({ children, title, pageDescription, imageFullUrl 
     </>
   )
 }
-
-export default ShopLayout
