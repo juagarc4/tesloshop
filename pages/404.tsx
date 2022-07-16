@@ -1,5 +1,5 @@
 import React from 'react'
-import ShopLayout from 'components/layouts/ShopLayout'
+import { ShopLayout } from 'components/layouts'
 import { Box, Typography } from '@mui/material'
 
 const Custom404 = () => {
