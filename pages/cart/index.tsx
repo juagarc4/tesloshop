@@ -1,4 +1,3 @@
-import React from 'react'
 import { Typography, Grid, CardContent, Divider, Card, Box, Button } from '@mui/material'
 import { ShopLayout } from 'components/layouts'
 import { CartList, OrderSummary } from 'components/cart'
