@@ -1,3 +1,4 @@
+import { CreditScoreOutlined } from '@mui/icons-material'
 import { Grid, Typography } from '@mui/material'
 
 export const OrderSummary = () => {
