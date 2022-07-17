@@ -4,7 +4,7 @@ import { AuthLayout } from 'components/layouts'
 
 const LoginPage = () => {
   return (
-    <AuthLayout title='Login page'>
+    <AuthLayout title='Sign in page'>
       <Box sx={{ width: 350, padding: '10px 20px' }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

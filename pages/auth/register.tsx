@@ -2,9 +2,9 @@ import NextLink from 'next/link'
 import { Box, Grid, TextField, Typography, Button, Link } from '@mui/material'
 import { AuthLayout } from 'components/layouts'
 
-const LoginPage = () => {
+const RegisterPage = () => {
   return (
-    <AuthLayout title='Login page'>
+    <AuthLayout title='Register page'>
       <Box sx={{ width: 350, padding: '10px 20px' }}>
         <Grid container spacing={2}>
           <Grid item xs={12} display='flex' justifyContent='end'>
@@ -39,4 +39,4 @@ const LoginPage = () => {
   )
 }
 
-export default LoginPage
+export default RegisterPage
