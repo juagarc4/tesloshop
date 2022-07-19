@@ -1,10 +1,10 @@
 import { Box, Button, Chip, Grid, Typography } from '@mui/material'
 import { ShopLayout } from 'components/layouts'
 import { ItemCounter } from 'components/ui'
-import { initialData } from 'database/products'
+import { seedData } from 'database/products'
 import { ProductSlideshow, SizeSelector } from 'components/products'
 
-const product = initialData.products[0]
+const product = seedData.products[0]
 const ProductPage = () => {
   return (
     <ShopLayout title={product.title} pageDescription={product.description}>

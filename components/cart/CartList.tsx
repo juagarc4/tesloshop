@@ -1,10 +1,10 @@
 import { FC } from 'react'
 import NextLink from 'next/link'
 import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material'
-import { initialData } from 'database/products'
+import { seedData } from 'database/products'
 import { ItemCounter } from 'components/ui'
 
-const productsInCart = [initialData.products[0], initialData.products[1], initialData.products[2]]
+const productsInCart = [seedData.products[0], seedData.products[1], seedData.products[2]]
 interface Props {
   editable?: boolean
 }
