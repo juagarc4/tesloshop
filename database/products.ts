@@ -17,7 +17,7 @@ type ValidTypes = 'shirts' | 'pants' | 'hoodies' | 'hats'
 interface SeedData {
   products: SeedProduct[]
 }
-export const initialData: SeedData = {
+export const seedData: SeedData = {
   products: [
     {
       description:
