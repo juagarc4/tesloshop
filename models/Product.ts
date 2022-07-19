@@ -40,7 +40,7 @@ const productSchema = new Schema(
   { timestamps: true }
 )
 
-// TODO: Crete Mongo index
+productSchema.index({ title: 'text', tags: 'text' })
 
 const Product: Model<IProduct> = mongoose.models.Product || model('Product', productSchema)
 
