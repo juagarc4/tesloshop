@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { db, SHOP_CONSTANTS } from 'database'
 import { IProduct } from 'interfaces'
 import { Product } from 'models'
-import {} from 'database/constants'
 
 type Data = { message: string } | IProduct[]
 
