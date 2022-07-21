@@ -15,19 +15,19 @@ export const Navbar = () => {
 
         <Box flex={1} />
         <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <NextLink href='/catregory/man' passHref>
+          <NextLink href='/category/men' passHref>
             <Link>
               <Button>Men</Button>
             </Link>
           </NextLink>
-          <NextLink href='/catregory/women' passHref>
+          <NextLink href='/category/women' passHref>
             <Link>
               <Button>Women</Button>
             </Link>
           </NextLink>
-          <NextLink href='/catregory/kid' passHref>
+          <NextLink href='/category/children' passHref>
             <Link>
-              <Button>Childrens</Button>
+              <Button>Children</Button>
             </Link>
           </NextLink>
         </Box>
