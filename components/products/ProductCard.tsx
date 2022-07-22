@@ -17,7 +17,7 @@ export const ProductCard: FC<Props> = ({ product }) => {
   return (
     <Grid item xs={6} sm={4} onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
       <Card>
-        <NextLink href='/product/slug' passHref prefetch={false}>
+        <NextLink href={`/product/${product.slug}`} passHref prefetch={false}>
           <Link>
             <CardActionArea>
               <CardMedia
