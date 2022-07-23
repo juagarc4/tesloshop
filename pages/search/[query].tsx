@@ -5,18 +5,18 @@ import { ProductList } from 'components/products'
 import { FullScreenLoading } from 'components/ui'
 import { useProducts } from 'hooks'
 
-const HomePage: NextPage = () => {
+const SearchPage: NextPage = () => {
   const { products, isLoading } = useProducts('/products')
 
   return (
-    <ShopLayout title={'Teslo-Shop - Home'} pageDescription={'Find the best products of Teslo here'}>
-      <Typography variant='h1'>Shop</Typography>
+    <ShopLayout title={'Teslo-Shop - Search'} pageDescription={'Find the best products of Teslo here'}>
+      <Typography variant='h1'>Search products</Typography>
       <Typography variant='h2' sx={{ mb: 1 }}>
-        All Products
+        ABC --- 123 Products
       </Typography>
       {isLoading ? <FullScreenLoading /> : <ProductList products={products} />}
     </ShopLayout>
   )
 }
 
-export default HomePage
+export default SearchPage
