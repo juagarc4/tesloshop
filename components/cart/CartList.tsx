@@ -1,24 +1,26 @@
-import { FC } from 'react'
+import { FC, useContext } from 'react'
 import NextLink from 'next/link'
 import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material'
-import { seedData } from 'database/products'
 import { ItemCounter } from 'components/ui'
+import { CartContext } from 'context'
 
-const productsInCart = [seedData.products[0], seedData.products[1], seedData.products[2]]
+// const productsInCart = [seedData.products[0], seedData.products[1], seedData.products[2]]
 interface Props {
   editable?: boolean
 }
 export const CartList: FC<Props> = ({ editable = false }) => {
+  const { cart } = useContext(CartContext)
+
   return (
     <>
-      {productsInCart.map((product) => (
+      {cart.map((product) => (
         <Grid container key={product.slug} spacing={2} sx={{ mb: 1 }}>
           <Grid item xs={3}>
-            {/* Link o product page */}
+            {/* Link to product page */}
             <NextLink href='/product/slug' passHref>
               <Link>
                 <CardActionArea>
-                  <CardMedia image={`/products/${product.images[0]}`} component='img' sx={{ borderRadius: '5px' }} />
+                  <CardMedia image={`/products/${product.image}`} component='img' sx={{ borderRadius: '5px' }} />
                 </CardActionArea>
               </Link>
             </NextLink>
@@ -29,7 +31,13 @@ export const CartList: FC<Props> = ({ editable = false }) => {
               <Typography variant='body1'>
                 Size: <strong>M</strong>
               </Typography>
-              {editable ? <ItemCounter /> : <Typography variant='h5'>3 items</Typography>}
+              {editable ? (
+                <ItemCounter currentValue={product.quantity} maxValue={10} updateQuantity={() => {}} />
+              ) : (
+                <Typography variant='h5'>
+                  {product.quantity} product{product.quantity > 1 && 's'}
+                </Typography>
+              )}
             </Box>
           </Grid>
           <Grid item xs={2} display='flex' flexDirection='column' alignItems='center'>
