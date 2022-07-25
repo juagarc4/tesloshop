@@ -5,6 +5,10 @@ import { ICartProduct } from 'interfaces'
 
 export interface CartState {
   cart: ICartProduct[]
+  numberOfItems: number
+  subTotal: number
+  taxes: number
+  total: number
 }
 
 interface Props {
@@ -13,6 +17,10 @@ interface Props {
 
 const CART_INITIAL_STATE: CartState = {
   cart: [],
+  numberOfItems: 0,
+  subTotal: 0,
+  taxes: 0,
+  total: 0,
 }
 
 export const CartProvider: FC<Props> = ({ children }) => {
@@ -43,7 +51,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
       taxes,
       total,
     }
-    console.log(orderSummary)
+    dispatch({ type: '[Cart] - Update order summary', payload: orderSummary })
   }, [state.cart])
 
   const addProductToCart = (product: ICartProduct) => {
