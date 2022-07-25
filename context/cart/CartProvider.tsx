@@ -1,7 +1,7 @@
-import { FC, ReactElement, useReducer } from 'react'
+import { FC, ReactElement, useEffect, useReducer } from 'react'
+import Cookie from 'js-cookie'
 import { CartContext, cartReducer } from './'
 import { ICartProduct } from 'interfaces'
-import { stat } from 'fs/promises'
 
 export interface CartState {
   cart: ICartProduct[]
@@ -17,6 +17,20 @@ const CART_INITIAL_STATE: CartState = {
 
 export const CartProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(cartReducer, CART_INITIAL_STATE)
+
+  useEffect(() => {
+    try {
+      const cartFromCookie = Cookie.get('cart') ? JSON.parse(Cookie.get('cart')!) : []
+      dispatch({ type: '[Cart] - Load cart from cookies | storage', payload: cartFromCookie })
+    } catch (error) {
+      dispatch({ type: '[Cart] - Load cart from cookies | storage', payload: [] })
+    }
+  }, [])
+
+  useEffect(() => {
+    Cookie.set('cart', JSON.stringify(state.cart))
+  }, [state.cart])
+
   const addProductToCart = (product: ICartProduct) => {
     // Solution: Step 1 (Not practical) => Duplicated products in cart can happen
     // dispatch({ type: '[Cart] - Add product', payload: product })
