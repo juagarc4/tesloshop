@@ -2,7 +2,7 @@ import { db } from 'database'
 import { User } from 'models'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
-import { jwt } from 'utils'
+import { jwt, validations } from 'utils'
 
 type Data =
   | {
@@ -37,6 +37,9 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     return res.status(400).json({ message: 'Name must have at least 2 characters' })
   }
   //TODO: Validate E-Mail
+  if (!validations.isValidEmail(email)) {
+    return res.status(400).json({ message: 'E-Mail is not valid' })
+  }
 
   await db.connect()
   const user = await User.findOne({ email })
@@ -52,6 +55,7 @@ const registerUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     password: bcrypt.hashSync(password.trim()),
     role: 'client',
   })
+
   try {
     await newUser.save({ validateBeforeSave: true })
   } catch (error) {
