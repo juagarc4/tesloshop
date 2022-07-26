@@ -1,1 +1,1 @@
-export * from './currency'
+export * as currency from './currency'

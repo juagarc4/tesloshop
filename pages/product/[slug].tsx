@@ -59,7 +59,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               {product.title}
             </Typography>
             <Typography variant='subtitle1' component='h2'>
-              {product.price}€
+              {product.price}
             </Typography>
             {/* Quantity */}
             <Box sx={{ my: 2 }}>

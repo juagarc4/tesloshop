@@ -4,6 +4,7 @@ import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '
 import { ItemCounter } from 'components/ui'
 import { CartContext } from 'context'
 import { ICartProduct } from 'interfaces'
+import { currency } from 'utils'
 
 // const productsInCart = [seedData.products[0], seedData.products[1], seedData.products[2]]
 interface Props {
@@ -50,7 +51,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
             </Box>
           </Grid>
           <Grid item xs={2} display='flex' flexDirection='column' alignItems='center'>
-            <Typography variant='subtitle1'>{`${product.price}€`}</Typography>
+            <Typography variant='subtitle1'>{currency.format(product.price)}</Typography>
             {editable && (
               <Button variant='text' color='secondary' onClick={() => removeCartProduct(product)}>
                 Remove
