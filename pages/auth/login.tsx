@@ -2,6 +2,7 @@ import NextLink from 'next/link'
 import { Box, Grid, TextField, Typography, Button, Link } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { AuthLayout } from 'components/layouts'
+import { validations } from 'utils'
 
 type FormData = {
   email: string
@@ -19,7 +20,7 @@ const LoginPage = () => {
   }
   return (
     <AuthLayout title='Sign in page'>
-      <form onSubmit={handleSubmit(onLoginUser)}>
+      <form onSubmit={handleSubmit(onLoginUser)} noValidate>
         <Box sx={{ width: 350, padding: '10px 20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -28,10 +29,32 @@ const LoginPage = () => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <TextField label='Email Address' type='email' variant='filled' fullWidth {...register('email')} />
+              <TextField
+                label='Email Address'
+                type='email'
+                variant='filled'
+                fullWidth
+                {...register('email', {
+                  required: 'This field is required.',
+                  validate: validations.isEmail,
+                })}
+                error={!!errors.email}
+                helperText={errors.email?.message}
+              />
             </Grid>
             <Grid item xs={12}>
-              <TextField label='Password' type='password' variant='filled' fullWidth {...register('password')} />
+              <TextField
+                label='Password'
+                type='password'
+                variant='filled'
+                fullWidth
+                {...register('password', {
+                  required: 'This field is required.',
+                  minLength: { value: 6, message: 'Password must have at least 6 chars.' },
+                })}
+                error={!!errors.password}
+                helperText={errors.password?.message}
+              />
             </Grid>
             <Grid item xs={12}>
               <Button type='submit' color='secondary' className='circular-btn' size='large' fullWidth>
