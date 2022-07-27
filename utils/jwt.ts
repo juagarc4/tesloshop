@@ -7,3 +7,22 @@ export const signToken = (_id: string, email: string) => {
 
   return jwt.sign({ _id, email }, process.env.JWT_SECRET_SEED, { expiresIn: '30m' })
 }
+
+export const isValidToken = (token: string): Promise<string> => {
+  if (!process.env.JWT_SECRET_SEED) {
+    throw new Error('There is no JWT seed. Please review environment variables in your .env file')
+  }
+
+  return new Promise((resolve, reject) => {
+    try {
+      jwt.verify(token, process.env.JWT_SECRET_SEED || '', (err, payload) => {
+        if (err) return reject('JWT is not valid')
+
+        const { _id } = payload as { _id: string }
+        resolve(_id)
+      })
+    } catch (error) {
+      reject('JWT is not valid')
+    }
+  })
+}
