@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from 'database'
 import { User } from 'models'
 import { jwt } from 'utils'
+import { IUser } from 'interfaces'
 
 type Data =
   | {
@@ -36,7 +37,7 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(401).json({ message: 'Auth token is not valid' } as any)
   }
   await db.connect()
-  const user = await User.findById(userId).lean()
+  const user: IUser = await User.findById(userId).lean()
   await db.disconnect()
 
   if (!user) {
