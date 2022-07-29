@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import NextLink from 'next/link'
-import { Box, Grid, TextField, Typography, Button, Link } from '@mui/material'
 import { useForm } from 'react-hook-form'
+import { Box, Grid, TextField, Typography, Button, Link, Chip } from '@mui/material'
+import { ErrorOutline } from '@mui/icons-material'
 import { AuthLayout } from 'components/layouts'
 import { validations } from 'utils'
 import { tesloApi } from 'api'
@@ -16,12 +18,17 @@ const LoginPage = () => {
     formState: { errors },
   } = useForm<FormData>()
 
+  const [showError, setShowError] = useState<Boolean>(false)
+
   const onLoginUser = async ({ email, password }: FormData) => {
+    setShowError(false)
     try {
       const { data } = await tesloApi.post('/user/login', { email, password })
       const { token, user } = data
     } catch (error) {
       console.log('Credentials error')
+      setShowError(true)
+      setTimeout(() => setShowError(false), 3000)
     }
   }
   return (
@@ -33,6 +40,13 @@ const LoginPage = () => {
               <Typography variant='h1' component='h1'>
                 Sign in to Teslo
               </Typography>
+              <Chip
+                label='User not found'
+                color='error'
+                icon={<ErrorOutline />}
+                className='fadeIn'
+                sx={{ mt: 1, display: showError ? 'flex' : 'none' }}
+              />
             </Grid>
             <Grid item xs={12}>
               <TextField
