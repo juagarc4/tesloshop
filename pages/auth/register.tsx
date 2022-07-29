@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 import { Box, Grid, TextField, Typography, Button, Link, Chip } from '@mui/material'
 import { ErrorOutline } from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
+import { AuthContext } from 'context'
 import { AuthLayout } from 'components/layouts'
 import { validations } from 'utils'
 import { tesloApi } from 'api'
@@ -13,6 +15,8 @@ type FormData = {
   password: string
 }
 const RegisterPage = () => {
+  const router = useRouter()
+  const { registerUser } = useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -20,19 +24,20 @@ const RegisterPage = () => {
   } = useForm<FormData>()
 
   const [showError, setShowError] = useState<Boolean>(false)
+  const [errorMessage, setErrorMessage] = useState<string>('')
 
   const onRegisterForm = async ({ name, email, password }: FormData) => {
     setShowError(false)
-    try {
-      const { data } = await tesloApi.post('/user/register', { name, email, password })
-      const { token, user } = data
-      console.log({ token, user })
-    } catch (error) {
-      console.log('Register failed', error)
+    const { hasError, message } = await registerUser(name, email, password)
+    console.log(hasError, message)
+    if (hasError) {
       setShowError(true)
+      setErrorMessage(message!)
       setTimeout(() => setShowError(false), 3000)
+      return
     }
     // TODO: Return user to previous page after login
+    router.replace('/')
   }
   return (
     <AuthLayout title='Register page'>
