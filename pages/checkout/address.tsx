@@ -1,5 +1,9 @@
-import { Typography, Grid, TextField, FormControl, InputLabel, MenuItem, Select, Button, Box } from '@mui/material'
+import { GetServerSideProps } from 'next'
+
+import { Typography, Grid, TextField, FormControl, MenuItem, Select, Button, Box } from '@mui/material'
 import { ShopLayout } from 'components/layouts'
+import { isValidToken } from '../../utils/jwt'
+import { jwt } from 'utils'
 
 const AddressPage = () => {
   return (
@@ -50,4 +54,27 @@ const AddressPage = () => {
   )
 }
 
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const { token = '' } = req.cookies
+
+  let isValidToken = false
+  try {
+    await jwt.isValidToken(token)
+    isValidToken = true
+  } catch (error) {
+    isValidToken = false
+  }
+
+  if (!isValidToken) {
+    return {
+      redirect: {
+        destination: '/auth/login?p=/checkout/address',
+        permanent: false,
+      },
+    }
+  }
+  return {
+    props: {},
+  }
+}
 export default AddressPage
