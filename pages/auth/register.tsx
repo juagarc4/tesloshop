@@ -36,8 +36,8 @@ const RegisterPage = () => {
       setTimeout(() => setShowError(false), 3000)
       return
     }
-    // TODO: Return user to previous page after login
-    router.replace('/')
+    const dest = router.query.p?.toString() || '/'
+    router.replace(dest)
   }
   return (
     <AuthLayout title='Register page'>
@@ -45,7 +45,7 @@ const RegisterPage = () => {
         <Box sx={{ width: 350, padding: '10px 20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12} display='flex' justifyContent='end'>
-              <NextLink href='/auth/login' passHref>
+              <NextLink href={router.query.p ? `/auth/login?p=${router.query.p?.toString()}` : '/auth/login'} passHref>
                 <Link sx={{ mx: 0.3 }} underline='always' variant='subtitle2'>
                   I already have an account
                 </Link>

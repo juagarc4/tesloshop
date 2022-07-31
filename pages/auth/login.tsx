@@ -32,8 +32,8 @@ const LoginPage = () => {
       setTimeout(() => setShowError(false), 3000)
       return
     }
-    // TODO: Return user to previous page after login
-    router.replace('/')
+    const dest = router.query.p?.toString() || '/'
+    router.replace(dest)
   }
   return (
     <AuthLayout title='Sign in page'>
@@ -86,7 +86,10 @@ const LoginPage = () => {
               </Button>
             </Grid>
             <Grid item xs={12} display='flex' justifyContent='end'>
-              <NextLink href='/auth/register' passHref>
+              <NextLink
+                href={router.query.p ? `/auth/register?p=${router.query.p?.toString()}` : '/auth/register'}
+                passHref
+              >
                 <Link sx={{ mx: 0.3 }} underline='always' variant='subtitle2'>
                   New to Teslo?
                 </Link>
