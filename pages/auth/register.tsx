@@ -29,7 +29,6 @@ const RegisterPage = () => {
   const onRegisterForm = async ({ name, email, password }: FormData) => {
     setShowError(false)
     const { hasError, message } = await registerUser(name, email, password)
-    console.log(hasError, message)
     if (hasError) {
       setShowError(true)
       setErrorMessage(message!)
