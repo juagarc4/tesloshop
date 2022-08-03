@@ -1,8 +1,9 @@
+import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { Typography, Grid, TextField, FormControl, MenuItem, Select, Button, Box, FormHelperText } from '@mui/material'
 import { ShopLayout } from 'components/layouts'
 import { countries } from 'utils'
-import { useState } from 'react'
+import Cookies from 'js-cookie'
 
 type FormData = {
   firstName: string
@@ -15,14 +16,25 @@ type FormData = {
   phone: string
 }
 const AddressPage = () => {
-  const [country, setCountry] = useState('')
+  const router = useRouter()
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>()
+  } = useForm<FormData>({
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      address: '',
+      address2: '',
+      postcode: '',
+      city: '',
+      country: countries[0].code,
+      phone: '',
+    },
+  })
 
-  const onSubmitAddressForm = async ({
+  const onSubmitAddressForm = ({
     firstName,
     lastName,
     address,
@@ -32,14 +44,15 @@ const AddressPage = () => {
     country,
     phone,
   }: FormData) => {
-    console.log(firstName)
-    console.log(lastName)
-    console.log(address)
-    console.log(address2)
-    console.log(postcode)
-    console.log(city)
-    console.log(country)
-    console.log(phone)
+    Cookies.set('firstName', firstName)
+    Cookies.set('lastName', lastName)
+    Cookies.set('address', address)
+    Cookies.set('address2', address2 || '')
+    Cookies.set('postcode', postcode)
+    Cookies.set('city', city)
+    Cookies.set('country', country)
+    Cookies.set('phone', phone)
+    router.push('/checkout/summary')
   }
 
   return (
@@ -117,24 +130,23 @@ const AddressPage = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>
-              <Select
-                id='city-select'
+              <TextField
+                select
+                value={countries[0].code}
                 variant='filled'
                 label='Country'
-                value={country}
                 {...register('country', {
                   required: 'This field is required.',
                 })}
                 error={!!errors.country}
-                onChange={(e) => setCountry(e.target.value)}
+                helperText={errors.country?.message}
               >
                 {countries.map((country) => (
                   <MenuItem key={country.code} value={country.code}>
                     {country.name}
                   </MenuItem>
                 ))}
-              </Select>
-              {!!errors.country && <FormHelperText error>{errors.country?.message}</FormHelperText>}
+              </TextField>
             </FormControl>
           </Grid>
           <Grid item xs={12} sm={6}>
