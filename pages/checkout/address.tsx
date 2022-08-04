@@ -1,20 +1,26 @@
 import { useRouter } from 'next/router'
 import { useForm } from 'react-hook-form'
 import { Typography, Grid, TextField, FormControl, MenuItem, Select, Button, Box, FormHelperText } from '@mui/material'
-import { ShopLayout } from 'components/layouts'
-import { countries } from 'utils'
 import Cookies from 'js-cookie'
+import { IAddress } from 'interfaces'
+import { countries } from 'utils'
+import { ShopLayout } from 'components/layouts'
 
-type FormData = {
-  firstName: string
-  lastName: string
-  address: string
-  address2?: string
-  postcode: string
-  city: string
-  country: string
-  phone: string
+type FormData = IAddress
+
+const getAddressFromCookies = (): FormData => {
+  return {
+    firstName: Cookies.get('firstName') || '',
+    lastName: Cookies.get('lastName') || '',
+    address: Cookies.get('address') || '',
+    address2: Cookies.get('address2') || '',
+    postcode: Cookies.get('postcode') || '',
+    city: Cookies.get('city') || '',
+    country: Cookies.get('country') || countries[0].code,
+    phone: Cookies.get('phone') || '',
+  }
 }
+
 const AddressPage = () => {
   const router = useRouter()
   const {
@@ -22,16 +28,7 @@ const AddressPage = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      address: '',
-      address2: '',
-      postcode: '',
-      city: '',
-      country: countries[0].code,
-      phone: '',
-    },
+    defaultValues: getAddressFromCookies(),
   })
 
   const onSubmitAddressForm = ({
