@@ -1,7 +1,8 @@
 import { FC, ReactElement, useEffect, useReducer } from 'react'
 import Cookies from 'js-cookie'
-import { CartContext, cartReducer } from './'
+import { cartReducer } from './'
 import { IAddress, ICartProduct } from 'interfaces'
+import { CartContext } from 'context'
 
 export interface CartState {
   isLoaded: boolean
@@ -116,6 +117,18 @@ export const CartProvider: FC<Props> = ({ children }) => {
     dispatch({ type: '[Cart] - Remove product in cart', payload: updatedProducts })
   }
 
+  const updateAddress = (address: IAddress) => {
+    Cookies.set('firstName', address.firstName)
+    Cookies.set('lastName', address.lastName)
+    Cookies.set('address', address.address)
+    Cookies.set('address2', address.address2 || '')
+    Cookies.set('postcode', address.postcode)
+    Cookies.set('city', address.city)
+    Cookies.set('country', address.country)
+    Cookies.set('phone', address.phone)
+    dispatch({ type: '[Cart] - Update address', payload: address })
+  }
+
   return (
     <CartContext.Provider
       value={{
@@ -123,6 +136,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
         addProductToCart,
         updateCartQuantity,
         removeCartProduct,
+        updateAddress,
       }}
     >
       {children}
