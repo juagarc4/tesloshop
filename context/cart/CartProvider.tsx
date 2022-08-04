@@ -40,17 +40,19 @@ export const CartProvider: FC<Props> = ({ children }) => {
   }, [])
 
   useEffect(() => {
-    const shippingAddress = {
-      firstName: Cookies.get('firstName') || '',
-      lastName: Cookies.get('lastName') || '',
-      address: Cookies.get('address') || '',
-      address2: Cookies.get('address2') || '',
-      postcode: Cookies.get('postcode') || '',
-      city: Cookies.get('city') || '',
-      country: Cookies.get('country') || '',
-      phone: Cookies.get('phone') || '',
+    if (Cookies.get('firstName')) {
+      const shippingAddress = {
+        firstName: Cookies.get('firstName') || '',
+        lastName: Cookies.get('lastName') || '',
+        address: Cookies.get('address') || '',
+        address2: Cookies.get('address2') || '',
+        postcode: Cookies.get('postcode') || '',
+        city: Cookies.get('city') || '',
+        country: Cookies.get('country') || '',
+        phone: Cookies.get('phone') || '',
+      }
+      dispatch({ type: '[Cart] - Load address from cookies', payload: shippingAddress })
     }
-    dispatch({ type: '[Cart] - Load address from cookies', payload: shippingAddress })
   }, [])
 
   useEffect(() => {
