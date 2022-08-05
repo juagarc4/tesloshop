@@ -16,9 +16,9 @@ const getAddressFromCookies = (): FormData => {
     lastName: Cookies.get('lastName') || '',
     address: Cookies.get('address') || '',
     address2: Cookies.get('address2') || '',
-    postcode: Cookies.get('postcode') || '',
+    postalCode: Cookies.get('postalCode') || '',
     city: Cookies.get('city') || '',
-    country: Cookies.get('country') || countries[0].code,
+    country: Cookies.get('country') || '',
     phone: Cookies.get('phone') || '',
   }
 }
@@ -90,14 +90,14 @@ const AddressPage = () => {
           </Grid>
           <Grid item xs={12} sm={6}>
             <TextField
-              label='Postcode'
+              label='Postal Code'
               variant='filled'
               fullWidth
-              {...register('postcode', {
+              {...register('postalCode', {
                 required: 'This field is required.',
               })}
-              error={!!errors.postcode}
-              helperText={errors.postcode?.message}
+              error={!!errors.postalCode}
+              helperText={errors.postalCode?.message}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -116,7 +116,7 @@ const AddressPage = () => {
             <FormControl fullWidth>
               <TextField
                 select
-                value={countries[0].code}
+                defaultValue={Cookies.get('country') || countries[0].code}
                 variant='filled'
                 label='Country'
                 {...register('country', {

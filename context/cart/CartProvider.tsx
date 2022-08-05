@@ -47,7 +47,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
         lastName: Cookies.get('lastName') || '',
         address: Cookies.get('address') || '',
         address2: Cookies.get('address2') || '',
-        postcode: Cookies.get('postcode') || '',
+        postalCode: Cookies.get('postalCode') || '',
         city: Cookies.get('city') || '',
         country: Cookies.get('country') || '',
         phone: Cookies.get('phone') || '',
@@ -122,7 +122,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
     Cookies.set('lastName', address.lastName)
     Cookies.set('address', address.address)
     Cookies.set('address2', address.address2 || '')
-    Cookies.set('postcode', address.postcode)
+    Cookies.set('postalCode', address.postalCode)
     Cookies.set('city', address.city)
     Cookies.set('country', address.country)
     Cookies.set('phone', address.phone)
