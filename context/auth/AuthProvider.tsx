@@ -87,7 +87,16 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   const logout = () => {
     Cookies.remove('token')
     Cookies.remove('cart')
+    Cookies.remove('firstName')
+    Cookies.remove('lastName')
+    Cookies.remove('address')
+    Cookies.remove('address2')
+    Cookies.remove('postalCode')
+    Cookies.remove('city')
+    Cookies.remove('country')
+    Cookies.remove('phone')
     router.reload()
+    router.replace('/')
   }
   return <AuthContext.Provider value={{ ...state, loginUser, registerUser, logout }}>{children}</AuthContext.Provider>
 }
