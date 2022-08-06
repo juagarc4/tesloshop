@@ -13,8 +13,6 @@ export default NextAuth({
         password: { label: 'Password', type: 'password', placeholder: 'Your password' },
       },
       async authorize(credentials) {
-        // console.log(credentials)
-        // TODO: Validate against DB
         return await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password)
       },
     }),
