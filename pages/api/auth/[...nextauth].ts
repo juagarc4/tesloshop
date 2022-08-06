@@ -1,6 +1,7 @@
 import NextAuth from 'next-auth'
 import GithubProvider from 'next-auth/providers/github'
 import Credentials from 'next-auth/providers/credentials'
+import { dbUsers } from 'database'
 
 export default NextAuth({
   // Configure one or more authentication providers
@@ -14,7 +15,7 @@ export default NextAuth({
       async authorize(credentials) {
         // console.log(credentials)
         // TODO: Validate against DB
-        return { name: 'Raul', email: 'raulgarciacanet@gmail.com', role: 'admin' }
+        return await dbUsers.checkUserEmailPassword(credentials!.email, credentials!.password)
       },
     }),
     GithubProvider({
