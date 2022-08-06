@@ -12,7 +12,7 @@ export default NextAuth({
         password: { label: 'Password', type: 'password', placeholder: 'Your password' },
       },
       async authorize(credentials) {
-        console.log(credentials)
+        // console.log(credentials)
         // TODO: Validate against DB
         return { name: 'Raul', email: 'raulgarciacanet@gmail.com', role: 'admin' }
       },
@@ -22,4 +22,30 @@ export default NextAuth({
       clientSecret: process.env.GITHUB_SECRET!,
     }),
   ],
+
+  // Callbacks
+  callbacks: {
+    async jwt({ account, token, user }) {
+      if (account) {
+        token.accessToken = account.access_token
+        switch (account.type) {
+          case 'oauth':
+            // TODO: Create user of verify against DB it it exists
+            break
+          case 'credentials':
+            token.user = user
+            break
+
+          default:
+            break
+        }
+      }
+      return token
+    },
+    async session({ session, token, user }) {
+      session.accessToken = token.access_token
+      session.user = token.user as any
+      return session
+    },
+  },
 })
