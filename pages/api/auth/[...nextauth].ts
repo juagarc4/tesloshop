@@ -29,7 +29,7 @@ export default NextAuth({
         token.accessToken = account.access_token
         switch (account.type) {
           case 'oauth':
-            // TODO: Create user of verify against DB it it exists
+            token.user = await dbUsers.oAuthToDbUser(user?.email || '', user?.name || '')
             break
           case 'credentials':
             token.user = user
