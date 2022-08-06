@@ -1,9 +1,14 @@
 import { useState, useContext } from 'react'
+import { GetServerSideProps } from 'next'
+
+import { signIn, getSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
+
 import { Box, Grid, TextField, Typography, Button, Link, Chip } from '@mui/material'
 import { ErrorOutline } from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
+
 import { AuthContext } from 'context'
 import { AuthLayout } from 'components/layouts'
 import { validations } from 'utils'
@@ -25,15 +30,18 @@ const LoginPage = () => {
 
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError(false)
-    const isValidLogin = await loginUser(email, password)
 
-    if (!isValidLogin) {
-      setShowError(true)
-      setTimeout(() => setShowError(false), 3000)
-      return
-    }
-    const dest = router.query.p?.toString() || '/'
-    router.replace(dest)
+    // Without NextAuth
+    // const isValidLogin = await loginUser(email, password)
+
+    // if (!isValidLogin) {
+    //   setShowError(true)
+    //   setTimeout(() => setShowError(false), 3000)
+    //   return
+    // }
+    // const dest = router.query.p?.toString() || '/'
+    // router.replace(dest)
+    await signIn('credentials', { email, password })
   }
   return (
     <AuthLayout title='Sign in page'>
@@ -100,6 +108,25 @@ const LoginPage = () => {
       </form>
     </AuthLayout>
   )
+}
+
+export const getServerSideProps: GetServerSideProps = async ({ req, query }) => {
+  const session = await getSession({ req })
+  console.log(session)
+  const { p = '/' } = query
+
+  if (session) {
+    return {
+      redirect: {
+        destination: p.toString(),
+        permanent: false,
+      },
+    }
+  }
+
+  return {
+    props: {},
+  }
 }
 
 export default LoginPage
