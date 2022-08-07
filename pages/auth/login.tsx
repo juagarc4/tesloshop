@@ -1,15 +1,14 @@
-import { useState, useContext } from 'react'
+import { useState, useEffect } from 'react'
 import { GetServerSideProps } from 'next'
 
-import { signIn, getSession } from 'next-auth/react'
+import { signIn, getSession, getProviders } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import NextLink from 'next/link'
 
-import { Box, Grid, TextField, Typography, Button, Link, Chip } from '@mui/material'
+import { Box, Grid, TextField, Typography, Button, Link, Chip, Divider } from '@mui/material'
 import { ErrorOutline } from '@mui/icons-material'
 import { useForm } from 'react-hook-form'
 
-import { AuthContext } from 'context'
 import { AuthLayout } from 'components/layouts'
 import { validations } from 'utils'
 
@@ -19,7 +18,6 @@ type FormData = {
 }
 const LoginPage = () => {
   const router = useRouter()
-  const { loginUser } = useContext(AuthContext)
   const {
     register,
     handleSubmit,
@@ -28,19 +26,17 @@ const LoginPage = () => {
 
   const [showError, setShowError] = useState<Boolean>(false)
 
+  const [providers, setProviders] = useState<any>({})
+
+  useEffect(() => {
+    getProviders().then((prov) => {
+      console.log(prov)
+      setProviders(prov)
+    })
+  }, [])
+
   const onLoginUser = async ({ email, password }: FormData) => {
     setShowError(false)
-
-    // Without NextAuth
-    // const isValidLogin = await loginUser(email, password)
-
-    // if (!isValidLogin) {
-    //   setShowError(true)
-    //   setTimeout(() => setShowError(false), 3000)
-    //   return
-    // }
-    // const dest = router.query.p?.toString() || '/'
-    // router.replace(dest)
     await signIn('credentials', { email, password })
   }
   return (
@@ -102,6 +98,26 @@ const LoginPage = () => {
                   New to Teslo?
                 </Link>
               </NextLink>
+            </Grid>
+
+            <Grid item xs={12} display='flex' justifyContent='end' flexDirection='column'>
+              <Divider sx={{ width: '100%', mb: 2 }} />
+              {Object.values(providers)
+                .filter((provider: any) => provider.id !== 'credentials')
+                .map((provider: any) => {
+                  return (
+                    <Button
+                      key={provider.id}
+                      variant='outlined'
+                      fullWidth
+                      color='primary'
+                      sx={{ mb: 1 }}
+                      onClick={() => signIn(provider.id)}
+                    >
+                      {provider.name}
+                    </Button>
+                  )
+                })}
             </Grid>
           </Grid>
         </Box>
