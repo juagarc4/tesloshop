@@ -30,7 +30,6 @@ const LoginPage = () => {
 
   useEffect(() => {
     getProviders().then((prov) => {
-      console.log(prov)
       setProviders(prov)
     })
   }, [])
