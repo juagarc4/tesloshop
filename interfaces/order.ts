@@ -2,7 +2,7 @@ import { IAddress, IUser, ISize } from 'interfaces'
 
 export interface IOrder {
   _id?: string
-  user: IUser | string
+  user?: IUser | string
   orderItems: IOrderItem[]
   shippingAddress: IAddress
   paymentResult?: string
@@ -11,7 +11,7 @@ export interface IOrder {
   tax: number
   total: number
   isPaid: boolean
-  paidAt: string
+  paidAt?: string
 }
 
 export interface IOrderItem {

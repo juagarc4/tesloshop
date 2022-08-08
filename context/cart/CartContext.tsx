@@ -6,7 +6,7 @@ interface ContextProps {
   cart: ICartProduct[]
   numberOfItems: number
   subTotal: number
-  taxes: number
+  tax: number
   total: number
   shippingAddress?: IAddress
   addProductToCart: (product: ICartProduct) => void

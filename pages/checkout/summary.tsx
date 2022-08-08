@@ -63,7 +63,13 @@ const SummaryPage = () => {
               </Box>
               <OrderSummary />
               <Box sx={{ mt: 3 }}>
-                <Button color='secondary' className='circular-btn' fullWidth onClick={onCreateOrder}>
+                <Button
+                  disabled={numberOfItems === 0}
+                  color='secondary'
+                  className='circular-btn'
+                  fullWidth
+                  onClick={onCreateOrder}
+                >
                   Confirm Order
                 </Button>
               </Box>

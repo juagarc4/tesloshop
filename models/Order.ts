@@ -26,7 +26,7 @@ const orderSchema = new Schema(
       phone: { type: String, required: true },
     },
     numberOfItems: { type: Number, required: true },
-    subTotatl: { type: Number, required: true },
+    subTotal: { type: Number, required: true },
     tax: { type: Number, required: true },
     total: { type: Number, required: true },
     isPaid: { type: Boolean, required: true, default: false },

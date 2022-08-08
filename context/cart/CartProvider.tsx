@@ -11,7 +11,7 @@ export interface CartState {
   cart: ICartProduct[]
   numberOfItems: number
   subTotal: number
-  taxes: number
+  tax: number
   total: number
   shippingAddress?: IAddress
 }
@@ -25,7 +25,7 @@ const CART_INITIAL_STATE: CartState = {
   cart: [],
   numberOfItems: 0,
   subTotal: 0,
-  taxes: 0,
+  tax: 0,
   total: 0,
   shippingAddress: undefined,
 }
@@ -65,14 +65,13 @@ export const CartProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     const numberOfItems = state.cart.reduce((prev, current) => current.quantity + prev, 0)
     const subTotal = state.cart.reduce((prev, current) => current.price * current.quantity + prev, 0)
-    const taxes = subTotal * Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)
-    const total = subTotal + taxes
+    const taxRate = Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)
 
     const orderSummary = {
       numberOfItems,
       subTotal,
-      taxes,
-      total,
+      tax: subTotal * taxRate,
+      total: subTotal * (taxRate + 1),
     }
     dispatch({ type: '[Cart] - Update order summary', payload: orderSummary })
   }, [state.cart])
@@ -143,7 +142,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
       shippingAddress: state.shippingAddress,
       numberOfItems: state.numberOfItems,
       subTotal: state.subTotal,
-      tax: state.taxes,
+      tax: state.tax,
       total: state.total,
       isPaid: false,
     }
