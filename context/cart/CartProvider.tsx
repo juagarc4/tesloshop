@@ -1,9 +1,10 @@
 import { FC, ReactElement, useEffect, useReducer, createContext } from 'react'
 import Cookies from 'js-cookie'
 import { cartReducer } from './'
-import { IAddress, ICartProduct } from 'interfaces'
+import { IAddress, ICartProduct, IOrder } from 'interfaces'
 import { CartContext } from 'context'
 import { tesloApi } from 'api'
+import { startSession } from 'mongoose'
 
 export interface CartState {
   isLoaded: boolean
@@ -131,8 +132,24 @@ export const CartProvider: FC<Props> = ({ children }) => {
   }
 
   const createOrder = async () => {
+    if (!state.shippingAddress) {
+      throw new Error('No shipping address was provided.')
+    }
+    const body: IOrder = {
+      orderItems: state.cart.map((p) => ({
+        ...p,
+        size: p.size!,
+      })),
+      shippingAddress: state.shippingAddress,
+      numberOfItems: state.numberOfItems,
+      subTotal: state.subTotal,
+      tax: state.taxes,
+      total: state.total,
+      isPaid: false,
+    }
+
     try {
-      const { data } = await tesloApi.post('/orders', {})
+      const { data } = await tesloApi.post('/orders', body)
       console.log({ data })
     } catch (error) {
       console.log(error)

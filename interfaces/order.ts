@@ -1,13 +1,13 @@
-import { IAddress, IUser } from 'interfaces'
+import { IAddress, IUser, ISize } from 'interfaces'
 
 export interface IOrder {
   _id?: string
   user: IUser | string
-  orderItems: IOrderItem
+  orderItems: IOrderItem[]
   shippingAddress: IAddress
   paymentResult?: string
   numberOfItems: number
-  subTotatl: number
+  subTotal: number
   tax: number
   total: number
   isPaid: boolean
@@ -17,7 +17,8 @@ export interface IOrder {
 export interface IOrderItem {
   _id: string
   title: string
-  size: string
+  size: ISize
+  gender: string
   quantity: number
   slug: string
   image: string
