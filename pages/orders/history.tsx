@@ -1,7 +1,11 @@
+import { GetServerSideProps, NextPage } from 'next'
 import NextLink from 'next/link'
 import { Chip, Grid, Link, Typography } from '@mui/material'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import { ShopLayout } from 'components/layouts'
+import { getSession } from 'next-auth/react'
+import { dbOrders } from 'database'
+import { IOrder } from 'interfaces'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -25,7 +29,7 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: (params: GridValueGetterParams) => {
       return (
-        <NextLink href={`/order/${params.row.id}`} passHref>
+        <NextLink href={`/orders/${params.row.orderId}`} passHref>
           <Link underline='always'>{params.row.link}</Link>
         </NextLink>
       )
@@ -33,17 +37,28 @@ const columns: GridColDef[] = [
   },
 ]
 
-const rows = [
-  { id: 1, fullname: 'Raul Garcia', paid: true, link: 'View Order' },
-  { id: 2, fullname: 'Maria Garcia', paid: true, link: 'View Order' },
-  { id: 3, fullname: 'Sonia Garcia', paid: false, link: 'View Order' },
-  { id: 4, fullname: 'Pedro Garcia', paid: false, link: 'View Order' },
-  { id: 5, fullname: 'Antonio Garcia', paid: true, link: 'View Order' },
-  { id: 6, fullname: 'Roberto Garcia', paid: false, link: 'View Order' },
-  { id: 7, fullname: 'Paul Garcia', paid: true, link: 'View Order' },
-]
+// const rows = [
+//   { id: 1, fullname: 'Raul Garcia', paid: true, link: 'View Order' },
+//   { id: 2, fullname: 'Maria Garcia', paid: true, link: 'View Order' },
+//   { id: 3, fullname: 'Sonia Garcia', paid: false, link: 'View Order' },
+//   { id: 4, fullname: 'Pedro Garcia', paid: false, link: 'View Order' },
+//   { id: 5, fullname: 'Antonio Garcia', paid: true, link: 'View Order' },
+//   { id: 6, fullname: 'Roberto Garcia', paid: false, link: 'View Order' },
+//   { id: 7, fullname: 'Paul Garcia', paid: true, link: 'View Order' },
+// ]
 
-const HistoryPage = () => {
+interface Props {
+  orders: IOrder[]
+}
+const HistoryPage: NextPage<Props> = ({ orders }) => {
+  const rows = orders.map((order, index) => ({
+    id: index + 1,
+    fullname: `${order.shippingAddress.firstName} ${order.shippingAddress.lastName}`,
+    paid: order.isPaid,
+    link: 'View Order',
+    orderId: order._id,
+  }))
+  console.log(rows)
   return (
     <ShopLayout title='Orders history' pageDescription='Page with history orders of the customer'>
       <Typography variant='h1' component='h1'>
@@ -57,4 +72,22 @@ const HistoryPage = () => {
   )
 }
 
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const session: any = await getSession({ req })
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: `/auth/login?p=/orders/history`,
+        permanent: false,
+      },
+    }
+  }
+  const orders = await dbOrders.getOrdersByUser(session.user._id)
+  return {
+    props: {
+      orders,
+    },
+  }
+}
 export default HistoryPage
