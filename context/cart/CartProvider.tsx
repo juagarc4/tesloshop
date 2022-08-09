@@ -5,6 +5,7 @@ import { IAddress, ICartProduct, IOrder } from 'interfaces'
 import { CartContext } from 'context'
 import { tesloApi } from 'api'
 import { startSession } from 'mongoose'
+import axios from 'axios'
 
 export interface CartState {
   isLoaded: boolean
@@ -130,7 +131,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
     dispatch({ type: '[Cart] - Update address', payload: address })
   }
 
-  const createOrder = async () => {
+  const createOrder = async (): Promise<{ hasError: boolean; message: string }> => {
     if (!state.shippingAddress) {
       throw new Error('No shipping address was provided.')
     }
@@ -148,10 +149,25 @@ export const CartProvider: FC<Props> = ({ children }) => {
     }
 
     try {
-      const { data } = await tesloApi.post('/orders', body)
+      const { data } = await tesloApi.post<IOrder>('/orders', body)
       console.log({ data })
+      // TODO: Dispatch action to clean cart
+      return {
+        hasError: false,
+        message: data._id!,
+      }
     } catch (error) {
-      console.log(error)
+      if (axios.isAxiosError(error)) {
+        const { message } = error.response?.data as { message: string }
+        return {
+          hasError: true,
+          message,
+        }
+      }
+      return {
+        hasError: true,
+        message: 'Unhandled Error. Contact with your support service.',
+      }
     }
   }
 
