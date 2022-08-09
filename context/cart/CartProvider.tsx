@@ -4,7 +4,6 @@ import { cartReducer } from './'
 import { IAddress, ICartProduct, IOrder } from 'interfaces'
 import { CartContext } from 'context'
 import { tesloApi } from 'api'
-import { startSession } from 'mongoose'
 import axios from 'axios'
 
 export interface CartState {
@@ -151,7 +150,7 @@ export const CartProvider: FC<Props> = ({ children }) => {
     try {
       const { data } = await tesloApi.post<IOrder>('/orders', body)
       console.log({ data })
-      // TODO: Dispatch action to clean cart
+      dispatch({ type: '[Cart] - Order completed' })
       return {
         hasError: false,
         message: data._id!,
