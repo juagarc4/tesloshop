@@ -65,7 +65,7 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <Typography>{shippingAddress.country}</Typography>
               <Typography>{shippingAddress.phone}</Typography>
               <Divider sx={{ my: 1 }} />
-              <OrderSummary />
+              <OrderSummary order={order} />
               <Box sx={{ mt: 3 }}>
                 {/* TODO */}
                 <h1>Pay</h1>
