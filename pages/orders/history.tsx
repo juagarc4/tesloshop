@@ -58,11 +58,10 @@ const HistoryPage: NextPage<Props> = ({ orders }) => {
     link: 'View Order',
     orderId: order._id,
   }))
-  console.log(rows)
   return (
     <ShopLayout title='Orders history' pageDescription='Page with history orders of the customer'>
       <Typography variant='h1' component='h1'>
-        <Grid container>
+        <Grid container className='fadeIn'>
           <Grid item xs={12} sx={{ height: 650, width: '100%' }}>
             <DataGrid rows={rows} columns={columns} pageSize={10} rowsPerPageOptions={[10]}></DataGrid>
           </Grid>
