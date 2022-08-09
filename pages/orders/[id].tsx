@@ -66,10 +66,9 @@ const OrderPage: NextPage<Props> = ({ order }) => {
               <Typography>{shippingAddress.phone}</Typography>
               <Divider sx={{ my: 1 }} />
               <OrderSummary order={order} />
-              <Box sx={{ mt: 3 }}>
+              <Box sx={{ mt: 3 }} display='flex' flexDirection='column'>
                 {/* TODO */}
-                <h1>Pay</h1>
-                {order.isPaid && (
+                {order.isPaid ? (
                   <Chip
                     sx={{ my: 2 }}
                     label='Order already paid'
@@ -77,6 +76,8 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                     color='success'
                     icon={<CreditScoreOutlined />}
                   />
+                ) : (
+                  <h1>Pay</h1>
                 )}
               </Box>
             </CardContent>
