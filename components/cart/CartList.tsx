@@ -3,23 +3,25 @@ import NextLink from 'next/link'
 import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography } from '@mui/material'
 import { ItemCounter } from 'components/ui'
 import { CartContext } from 'context'
-import { ICartProduct } from 'interfaces'
+import { ICartProduct, IOrderItem } from 'interfaces'
 import { currency } from 'utils'
 
 // const productsInCart = [seedData.products[0], seedData.products[1], seedData.products[2]]
 interface Props {
   editable?: boolean
+  products?: IOrderItem[]
 }
-export const CartList: FC<Props> = ({ editable = false }) => {
+export const CartList: FC<Props> = ({ editable = false, products }) => {
   const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext)
   const onUpdateCartQuantity = (product: ICartProduct, newQuatityValue: number) => {
     product.quantity = newQuatityValue
     updateCartQuantity(product)
   }
 
+  const productsToShow = products ? products : cart
   return (
     <>
-      {cart.map((product) => (
+      {productsToShow.map((product) => (
         <Grid container key={product.slug + product.size} spacing={2} sx={{ mb: 1 }}>
           <Grid item xs={3}>
             {/* Link to product page */}
@@ -41,7 +43,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
                 <ItemCounter
                   currentValue={product.quantity}
                   maxValue={10}
-                  updateQuantity={(value) => onUpdateCartQuantity(product, value)}
+                  updateQuantity={(value) => onUpdateCartQuantity(product as ICartProduct, value)}
                 />
               ) : (
                 <Typography variant='h5'>
@@ -53,7 +55,7 @@ export const CartList: FC<Props> = ({ editable = false }) => {
           <Grid item xs={2} display='flex' flexDirection='column' alignItems='center'>
             <Typography variant='subtitle1'>{currency.format(product.price)}</Typography>
             {editable && (
-              <Button variant='text' color='secondary' onClick={() => removeCartProduct(product)}>
+              <Button variant='text' color='secondary' onClick={() => removeCartProduct(product as ICartProduct)}>
                 Remove
               </Button>
             )}
