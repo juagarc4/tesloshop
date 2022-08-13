@@ -1,20 +1,45 @@
 import { GetServerSideProps, NextPage } from 'next'
+import { useRouter } from 'next/router'
 import { getSession } from 'next-auth/react'
-import NextLink from 'next/link'
 
 import { Typography, Grid, CardContent, Divider, Card, Box, Link, Chip } from '@mui/material'
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material'
+import { PayPalButtons } from '@paypal/react-paypal-js'
 
 import { ShopLayout } from 'components/layouts'
 import { CartList, OrderSummary } from 'components/cart'
 import { dbOrders } from 'database'
 import { IOrder } from 'interfaces'
+import { tesloApi } from 'api'
 
 interface Props {
   order: IOrder
 }
+
+interface OrderResponseBody {
+  id: string
+  status: 'COMPLETED' | 'SAVED' | 'APPROVED' | 'VOIDED' | 'COMPLETED' | 'PAYER_ACTION_REQUIRED'
+}
 const OrderPage: NextPage<Props> = ({ order }) => {
+  const router = useRouter()
   const { shippingAddress } = order
+
+  const onOrderCompleted = async (details: OrderResponseBody) => {
+    if (details.status !== 'COMPLETED') {
+      return alert('There is no payment on PayPal')
+    }
+
+    try {
+      const { data } = await tesloApi.post('/orders/pay', {
+        transactionId: details.id,
+        orderId: order._id,
+      })
+      router.reload()
+    } catch (error) {
+      console.log(error)
+      alert('Error')
+    }
+  }
 
   return (
     <ShopLayout title='Order Summary' pageDescription='Order summary'>
@@ -76,7 +101,24 @@ const OrderPage: NextPage<Props> = ({ order }) => {
                     icon={<CreditScoreOutlined />}
                   />
                 ) : (
-                  <h1>Pay</h1>
+                  <PayPalButtons
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              value: order.total.toString(),
+                            },
+                          },
+                        ],
+                      })
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order!.capture().then((details) => {
+                        onOrderCompleted(details)
+                      })
+                    }}
+                  />
                 )}
               </Box>
             </CardContent>

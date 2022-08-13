@@ -1,5 +1,6 @@
 export * from './address'
 export * from './cart'
 export * from './order'
+export * as IPaypal from './paypal'
 export * from './product'
 export * from './user'
