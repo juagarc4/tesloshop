@@ -7,6 +7,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js'
 
 import { lightTheme } from 'themes'
 import { AuthProvider, CartProvider, UIProvider } from 'context'
+import 'styles/globals.css'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
