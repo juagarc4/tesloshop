@@ -6,7 +6,7 @@ type Data =
   | {
       numberOfOrders: number
       paidOrders: number //isPaid: true
-      notPaidOrders: number
+      pendingOrders: number
       numberOfClients: number // role: client
       numberOfProducts: number
       productsOutOfStock: number //inStock = 0
@@ -37,10 +37,10 @@ const getStatistics = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
     ])
   await db.disconnect()
 
-  res.status(400).json({
+  res.status(200).json({
     numberOfOrders,
     paidOrders,
-    notPaidOrders: numberOfOrders - paidOrders,
+    pendingOrders: numberOfOrders - paidOrders,
     numberOfClients,
     numberOfProducts,
     productsOutOfStock,
