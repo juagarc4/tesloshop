@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react'
 import { useRouter } from 'next/router'
 import { UIContext, AuthContext } from 'context'
+import { DashboardOutlined } from '@mui/icons-material'
 import {
   Box,
   Divider,
@@ -137,13 +138,18 @@ export const SideMenu = () => {
             <>
               <Divider />
               <ListSubheader>Admin Panel</ListSubheader>
+              <ListItem button onClick={() => navigateTo('/admin')}>
+                <ListItemIcon>
+                  <DashboardOutlined />
+                </ListItemIcon>
+                <ListItemText primary={'Dashboard'} />
+              </ListItem>
               <ListItem button>
                 <ListItemIcon>
                   <CategoryOutlined />
                 </ListItemIcon>
                 <ListItemText primary={'Products'} />
               </ListItem>
-
               <ListItem button>
                 <ListItemIcon>
                   <ConfirmationNumberOutlined />
