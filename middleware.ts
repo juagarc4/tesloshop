@@ -13,7 +13,8 @@ export async function middleware(req: NextRequest | any) {
       return NextResponse.redirect(url)
     }
   }
-  if (req.nextUrl.pathname.startsWith(config.matcher[1])) {
+
+  if (req.nextUrl.pathname.startsWith('/admin')) {
     const validRoles = ['admin', 'super-user', 'SEO']
     if (!session || !validRoles.includes(session.user.role)) {
       url.pathname = '/'
@@ -23,5 +24,5 @@ export async function middleware(req: NextRequest | any) {
   return NextResponse.next()
 }
 export const config = {
-  matcher: ['/checkout/address', '/admin'],
+  matcher: ['/checkout/address', '/admin/:path*'],
 }
