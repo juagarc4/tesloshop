@@ -8,7 +8,7 @@ import { tesloApi } from 'api'
 import { AdminLayout } from 'components/layouts'
 import { IUser } from 'interfaces'
 
-const usersPage = () => {
+const UsersPage = () => {
   const { data, error } = useSWR<IUser[]>('/api/admin/users')
   const [users, setUsers] = useState<IUser[]>([])
 
@@ -79,4 +79,4 @@ const usersPage = () => {
   )
 }
 
-export default usersPage
+export default UsersPage

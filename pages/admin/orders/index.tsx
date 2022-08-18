@@ -41,7 +41,7 @@ const columns: GridColDef[] = [
   { field: 'createdAt', headerName: 'Created', width: 200 },
 ]
 
-const ordersPage = () => {
+const OrdersPage = () => {
   const { data, error } = useSWR<IOrder[]>('/api/admin/orders')
 
   if (!data && !error) return <></>
@@ -67,4 +67,4 @@ const ordersPage = () => {
   )
 }
 
-export default ordersPage
+export default OrdersPage
