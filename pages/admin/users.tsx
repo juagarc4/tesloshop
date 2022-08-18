@@ -1,21 +1,37 @@
+import { useState, useEffect } from 'react'
 import useSWR from 'swr'
 import { Grid, MenuItem, Select } from '@mui/material'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import { PeopleOutlined } from '@mui/icons-material'
 
+import { tesloApi } from 'api'
 import { AdminLayout } from 'components/layouts'
 import { IUser } from 'interfaces'
-import { tesloApi } from 'api'
 
 const usersPage = () => {
   const { data, error } = useSWR<IUser[]>('/api/admin/users')
+  const [users, setUsers] = useState<IUser[]>([])
+
+  useEffect(() => {
+    if (data) {
+      setUsers(data)
+    }
+  }, [data])
 
   if (!data && !error) return <></>
 
   const onRoleUpdated = async (userId: string, newRole: string) => {
+    const previousUsers = users.map((user) => ({ ...user }))
+    const updatedUsers = users.map((user) => ({
+      ...user,
+      role: userId === user._id ? newRole : user.role,
+    }))
+
+    setUsers(updatedUsers as IUser[])
     try {
       await tesloApi.put('/admin/users', { userId, role: newRole })
     } catch (error) {
+      setUsers(previousUsers)
       alert('Role could not be updated')
     }
   }
@@ -45,7 +61,7 @@ const usersPage = () => {
     },
   ]
 
-  const rows = data!.map((user) => ({
+  const rows = users.map((user) => ({
     id: user._id,
     email: user.email,
     name: user.name,
