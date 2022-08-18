@@ -5,7 +5,7 @@ import { AdminLayout } from 'components/layouts'
 import { IUser } from 'interfaces'
 import NextLink from 'next/link'
 import useSWR from 'swr'
-import { IOrder } from '../../interfaces/order'
+import { IOrder } from '../../../interfaces/order'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID', width: 250 },
@@ -30,7 +30,7 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <NextLink href={`/orders/${row.id}`} passHref>
+        <NextLink href={`/admin/orders/${row.id}`} passHref>
           <Link target='_blank' underline='always'>
             {row.link}
           </Link>
