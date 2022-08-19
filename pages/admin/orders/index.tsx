@@ -1,11 +1,9 @@
+import useSWR from 'swr'
 import { ConfirmationNumberOutlined } from '@mui/icons-material'
-import { Chip, Grid, Link } from '@mui/material'
+import { Chip, Grid } from '@mui/material'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 import { AdminLayout } from 'components/layouts'
-import { IUser } from 'interfaces'
-import NextLink from 'next/link'
-import useSWR from 'swr'
-import { IOrder } from '../../../interfaces/order'
+import { IUser, IOrder } from 'interfaces'
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'Order ID', width: 250 },
@@ -30,11 +28,9 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <NextLink href={`/admin/orders/${row.id}`} passHref>
-          <Link target='_blank' underline='always'>
-            {row.link}
-          </Link>
-        </NextLink>
+        <a target='_blank' href={`/admin/orders/${row.id}`}>
+          {row.link}
+        </a>
       )
     },
   },
