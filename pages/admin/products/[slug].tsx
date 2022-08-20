@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect } from 'react'
 import { GetServerSideProps } from 'next'
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material'
 import { IGender, IProduct, ISize, IType } from 'interfaces'
@@ -56,9 +56,22 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     formState: { errors },
     getValues,
     setValue,
+    watch,
   } = useForm({
     defaultValues: product,
   })
+
+  useEffect(() => {
+    const subscription = watch((value, { name, type }) => {
+      if (name === 'title') {
+        const regex = /[^a-zA-Z0-9_]/gi
+        const newSlug = value.title?.trim().replaceAll(' ', '_').replaceAll(regex, '').toLocaleLowerCase() || ''
+        setValue('slug', newSlug, { shouldValidate: true })
+      }
+    })
+
+    return () => subscription.unsubscribe()
+  }, [watch])
 
   const onChangeSize = (size: ISize) => {
     const currentSizes = getValues('sizes')
