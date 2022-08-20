@@ -54,11 +54,26 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     register,
     handleSubmit,
     formState: { errors },
+    getValues,
+    setValue,
   } = useForm({
     defaultValues: product,
   })
+
+  const onChangeSize = (size: ISize) => {
+    const currentSizes = getValues('sizes')
+
+    if (currentSizes.includes(size)) {
+      return setValue(
+        'sizes',
+        currentSizes.filter((s) => s != size),
+        { shouldValidate: true }
+      )
+    }
+    setValue('sizes', [...currentSizes, size], { shouldValidate: true })
+  }
   const onDeleteTag = (tag: string) => {}
-  const onSubmit = (form: formData) => {
+  const onSubmit = (form: FormData) => {
     console.log(form)
   }
 
@@ -135,8 +150,8 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
               <FormLabel>Type</FormLabel>
               <RadioGroup
                 row
-                // value={ status }
-                // onChange={ onStatusChanged }
+                value={getValues('type')}
+                onChange={({ target }) => setValue('type', target.value as IType, { shouldValidate: true })}
               >
                 {validTypes.map((option) => (
                   <FormControlLabel
@@ -153,8 +168,8 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
               <FormLabel>Gender</FormLabel>
               <RadioGroup
                 row
-                // value={ status }
-                // onChange={ onStatusChanged }
+                value={getValues('gender')}
+                onChange={({ target }) => setValue('gender', target.value as IGender, { shouldValidate: true })}
               >
                 {validGender.map((option) => (
                   <FormControlLabel
@@ -170,7 +185,12 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
             <FormGroup>
               <FormLabel>Sizes</FormLabel>
               {validSizes.map((size) => (
-                <FormControlLabel key={size} control={<Checkbox />} label={size} />
+                <FormControlLabel
+                  key={size}
+                  control={<Checkbox checked={getValues('sizes').includes(size)} />}
+                  label={size}
+                  onChange={() => onChangeSize(size)}
+                />
               ))}
             </FormGroup>
           </Grid>
