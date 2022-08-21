@@ -91,9 +91,7 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     setNewTagValue('')
     const currentTags = getValues('tags')
     if (currentTags.includes(newTag)) return
-
     currentTags.push(newTag)
-    // setValue('tags', )
   }
   const onDeleteTag = (tag: string) => {
     const updatedTags = getValues('tags').filter((t) => t !== tag)
