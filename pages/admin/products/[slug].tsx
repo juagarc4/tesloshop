@@ -26,6 +26,7 @@ import {
   TextField,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
+import { tesloApi } from 'api'
 
 const validTypes: IType[] = ['shirts', 'pants', 'hoodies', 'hats']
 const validGender: IGender[] = ['men', 'women', 'kid', 'unisex']
@@ -51,6 +52,7 @@ interface Props {
 
 const ProductAdminPage: FC<Props> = ({ product }) => {
   const [newTagValue, setNewTagValue] = useState('')
+  const [isSaving, setIsSaving] = useState(false)
   const {
     register,
     handleSubmit,
@@ -97,15 +99,40 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     const updatedTags = getValues('tags').filter((t) => t !== tag)
     setValue('tags', updatedTags, { shouldValidate: true })
   }
-  const onSubmit = (form: FormData) => {
-    console.log(form)
+  const onSubmit = async (form: FormData) => {
+    // TODO: Better UX returning errors. Snackbar?
+    if (form.images.length < 2) return alert('At least 2 images')
+    setIsSaving(true)
+
+    try {
+      const { data } = await tesloApi({
+        url: '/admin/products',
+        method: 'PUT', //TODO: if we have an _id, update product, otherwise create product
+        data: form,
+      })
+      console.log({ data })
+      if (!form._id) {
+        //TODO: Reload browser
+      } else {
+        setIsSaving(false)
+      }
+    } catch (error) {
+      console.log(error)
+      setIsSaving(false)
+    }
   }
 
   return (
     <AdminLayout title={'Producto'} subTitle={`Editing: ${product.title}`} icon={<DriveFileRenameOutline />}>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
-          <Button color='secondary' startIcon={<SaveOutlined />} sx={{ width: '150px' }} type='submit'>
+          <Button
+            color='secondary'
+            startIcon={<SaveOutlined />}
+            sx={{ width: '150px' }}
+            type='submit'
+            disabled={isSaving}
+          >
             Save
           </Button>
         </Box>

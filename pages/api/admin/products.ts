@@ -38,7 +38,7 @@ const updateProdct = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     return res.status(400).json({ message: 'Product id not valid' })
   }
 
-  if (images.length <= 2) {
+  if (images.length < 2) {
     return res.status(400).json({ message: 'At least 2 images are needed' })
   }
 
