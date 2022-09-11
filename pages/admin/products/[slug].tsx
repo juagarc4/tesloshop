@@ -1,5 +1,6 @@
-import { FC, useEffect, useState } from 'react'
+import { ChangeEvent, FC, useEffect, useRef, useState } from 'react'
 import { GetServerSideProps } from 'next'
+import { useRouter } from 'next/router'
 import { DriveFileRenameOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material'
 import { IGender, IProduct, ISize, IType } from 'interfaces'
 import { dbProducts } from 'database'
@@ -19,14 +20,14 @@ import {
   FormGroup,
   FormLabel,
   Grid,
-  ListItem,
-  Paper,
   Radio,
   RadioGroup,
   TextField,
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { tesloApi } from 'api'
+import { Product } from 'models'
+import { display } from '@mui/system'
 
 const validTypes: IType[] = ['shirts', 'pants', 'hoodies', 'hats']
 const validGender: IGender[] = ['men', 'women', 'kid', 'unisex']
@@ -51,6 +52,8 @@ interface Props {
 }
 
 const ProductAdminPage: FC<Props> = ({ product }) => {
+  const router = useRouter()
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [newTagValue, setNewTagValue] = useState('')
   const [isSaving, setIsSaving] = useState(false)
   const {
@@ -99,6 +102,20 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     const updatedTags = getValues('tags').filter((t) => t !== tag)
     setValue('tags', updatedTags, { shouldValidate: true })
   }
+
+  const onFilesSelected = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (!target.files || target.files.length === 0) return
+
+    console.log(target.files)
+
+    try {
+      for (const file of target.files) {
+        const formData = new FormData()
+        console.log(file)
+      }
+    } catch (error) {}
+  }
+
   const onSubmit = async (form: FormData) => {
     // TODO: Better UX returning errors. Snackbar?
     if (form.images.length < 2) return alert('At least 2 images')
@@ -107,12 +124,12 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     try {
       const { data } = await tesloApi({
         url: '/admin/products',
-        method: 'PUT', //TODO: if we have an _id, update product, otherwise create product
+        method: form._id ? 'PUT' : 'POST', //TODO: if we have an _id, update product, otherwise create product
         data: form,
       })
       console.log({ data })
       if (!form._id) {
-        //TODO: Reload browser
+        router.replace(`/admin/products/${form.slug}`)
       } else {
         setIsSaving(false)
       }
@@ -300,9 +317,23 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
             <Box display='flex' flexDirection='column'>
               <FormLabel sx={{ mb: 1 }}>Images</FormLabel>
-              <Button color='secondary' fullWidth startIcon={<UploadOutlined />} sx={{ mb: 3 }}>
+              <Button
+                color='secondary'
+                fullWidth
+                startIcon={<UploadOutlined />}
+                sx={{ mb: 3 }}
+                onClick={() => fileInputRef.current?.click()}
+              >
                 Image upload
               </Button>
+              <input
+                ref={fileInputRef}
+                type='file'
+                multiple
+                accept='image/png, image/jpg, image/jpeg'
+                style={{ display: 'none' }}
+                onChange={onFilesSelected}
+              />
 
               <Chip label='You need at least 2 images' color='error' variant='outlined' />
 
@@ -330,8 +361,16 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { slug = '' } = query
+  let product: IProduct | null
 
-  const product = await dbProducts.getProductBySlug(slug.toString())
+  if (slug === 'new') {
+    const tempProduct = JSON.parse(JSON.stringify(new Product()))
+    delete tempProduct._id
+    tempProduct.images = ['img1.jpg', 'img2.jpg']
+    product = tempProduct
+  } else {
+    product = await dbProducts.getProductBySlug(slug.toLocaleString())
+  }
 
   if (!product) {
     return {

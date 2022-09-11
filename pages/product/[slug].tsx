@@ -9,6 +9,7 @@ import { IProduct, ICartProduct, ISize } from 'interfaces'
 import { ShopLayout } from 'components/layouts'
 import { ItemCounter /* FullScreenLoading*/ } from 'components/ui'
 import { ProductSlideshow, SizeSelector } from 'components/products'
+import { currency } from 'utils'
 
 interface Props {
   product: IProduct
@@ -59,7 +60,7 @@ const ProductPage: NextPage<Props> = ({ product }) => {
               {product.title}
             </Typography>
             <Typography variant='subtitle1' component='h2'>
-              {product.price}
+              {currency.format(product.price)}
             </Typography>
             {/* Quantity */}
             <Box sx={{ my: 2 }}>

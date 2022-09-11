@@ -19,6 +19,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
     case 'PUT':
       return updateProdct(req, res)
     case 'POST':
+      return createProduct(req, res)
     default:
       return res.status(400).json({ message: 'Bad request' })
   }
@@ -56,6 +57,35 @@ const updateProdct = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     await db.disconnect()
     return res.status(200).json(product)
   } catch (error) {
+    console.log(error)
+    await db.disconnect()
+    return res.status(400).json({ message: 'Unhandled error: Review server console.' })
+  }
+}
+
+const createProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { images = [] } = req.body as IProduct
+
+  if (images.length < 2) {
+    return res.status(400).json({ message: 'Product needs at least 2 Images' })
+  }
+
+  //TODO: We probably have localhost:3000/products/image.jpg
+
+  try {
+    await db.connect()
+    const productInDB = await Product.findOne({ slug: req.body.slug })
+    if (productInDB) {
+      await db.disconnect()
+      return res.status(400).json({ message: 'Product with this slug already exists' })
+    }
+    const product = new Product(req.body)
+    await product.save()
+    await db.disconnect()
+
+    return res.status(201).json(product)
+  } catch (error) {
+    console.log(error)
     await db.disconnect()
     return res.status(400).json({ message: 'Unhandled error: Review server console.' })
   }
