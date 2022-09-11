@@ -103,15 +103,15 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
     setValue('tags', updatedTags, { shouldValidate: true })
   }
 
-  const onFilesSelected = ({ target }: ChangeEvent<HTMLInputElement>) => {
+  const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (!target.files || target.files.length === 0) return
-
-    console.log(target.files)
 
     try {
       for (const file of target.files) {
         const formData = new FormData()
-        console.log(file)
+        formData.append('file', file)
+        const { data } = await tesloApi.post<{ message: string }>('/admin/upload', formData)
+        console.log(data)
       }
     } catch (error) {}
   }
@@ -127,7 +127,6 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
         method: form._id ? 'PUT' : 'POST', //TODO: if we have an _id, update product, otherwise create product
         data: form,
       })
-      console.log({ data })
       if (!form._id) {
         router.replace(`/admin/products/${form.slug}`)
       } else {
