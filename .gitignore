@@ -1,8 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 .history
 mongo
-
 .env*.*
+yarn.lock
+package-lock.json
 
 # dependencies
 /node_modules
@@ -37,3 +38,5 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+
