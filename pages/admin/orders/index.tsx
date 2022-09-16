@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { ConfirmationNumberOutlined } from '@mui/icons-material'
 import { Chip, Grid } from '@mui/material'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { AdminLayout } from 'components/layouts'
 import { IUser, IOrder } from 'interfaces'
 
@@ -13,7 +13,7 @@ const columns: GridColDef[] = [
   {
     field: 'isPaid',
     headerName: 'Paid',
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       return row.isPaid ? (
         <Chip variant='outlined' label='Paid' color='success' />
       ) : (
@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
     field: 'link',
     headerName: 'Order',
     sortable: false,
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       return (
         <a target='_blank' rel='noreferrer' href={`/admin/orders/${row.id}`}>
           {row.link}
