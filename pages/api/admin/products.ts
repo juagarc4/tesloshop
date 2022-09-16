@@ -63,7 +63,6 @@ const updateProdct = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
     product.images.forEach(async (image) => {
       if (!images.includes(image)) {
         const [fileId, extension] = image.substring(image.lastIndexOf('/') + 1).split('.')
-        console.log({ image, fileId, extension })
         await cloudinary.uploader.destroy(fileId)
       }
     })
@@ -83,8 +82,6 @@ const createProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) =>
   if (images.length < 2) {
     return res.status(400).json({ message: 'Product needs at least 2 Images' })
   }
-
-  //TODO: We probably have localhost:3000/products/image.jpg
 
   try {
     await db.connect()
