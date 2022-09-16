@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import useSWR from 'swr'
 import { Grid, MenuItem, Select } from '@mui/material'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { PeopleOutlined } from '@mui/icons-material'
 
 import { tesloApi } from 'api'
@@ -43,7 +43,7 @@ const UsersPage = () => {
       field: 'role',
       headerName: 'Role',
       width: 300,
-      renderCell: ({ row }: GridValueGetterParams) => {
+      renderCell: ({ row }: GridRenderCellParams) => {
         return (
           <Select
             value={row.role}

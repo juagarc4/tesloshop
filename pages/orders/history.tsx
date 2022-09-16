@@ -1,7 +1,7 @@
 import { GetServerSideProps, NextPage } from 'next'
 import NextLink from 'next/link'
 import { Chip, Grid, Link, Typography } from '@mui/material'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { ShopLayout } from 'components/layouts'
 import { getSession } from 'next-auth/react'
 import { dbOrders } from 'database'
@@ -14,7 +14,7 @@ const columns: GridColDef[] = [
     field: 'paid',
     headerName: 'Paid',
     width: 200,
-    renderCell: (params: GridValueGetterParams) => {
+    renderCell: (params: GridRenderCellParams) => {
       return params.row.paid ? (
         <Chip color='success' label='Paid' variant='outlined' />
       ) : (
@@ -27,7 +27,7 @@ const columns: GridColDef[] = [
     headerName: 'Order',
     width: 200,
     sortable: false,
-    renderCell: (params: GridValueGetterParams) => {
+    renderCell: (params: GridRenderCellParams) => {
       return (
         <NextLink href={`/orders/${params.row.orderId}`} passHref>
           <Link underline='always'>{params.row.link}</Link>
