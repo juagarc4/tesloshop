@@ -2,7 +2,7 @@ import NextLink from 'next/link'
 import useSWR from 'swr'
 import { AddOutlined, CategoryOutlined } from '@mui/icons-material'
 import { Grid, CardMedia, Link, Box, Button } from '@mui/material'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { IProduct } from 'interfaces'
 import { AdminLayout } from 'components/layouts'
 
@@ -10,7 +10,7 @@ const columns: GridColDef[] = [
   {
     field: 'img',
     headerName: 'Image',
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       return (
         <a target='_blank' rel='noreferrer' href={`/product/${row.slug}`}>
           <CardMedia alt={row.title} className='fadeIn' image={row.img} component='img' sx={{ borderRadius: '5px' }} />
@@ -22,7 +22,7 @@ const columns: GridColDef[] = [
     field: 'title',
     headerName: 'Title',
     width: 250,
-    renderCell: ({ row }: GridValueGetterParams) => {
+    renderCell: ({ row }: GridRenderCellParams) => {
       return (
         <NextLink href={`/admin/products/${row.slug}`} passHref>
           <Link underline='always'>{row.title}</Link>
