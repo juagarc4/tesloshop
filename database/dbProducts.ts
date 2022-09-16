@@ -11,7 +11,9 @@ export const getProductBySlug = async (slug: string): Promise<IProduct | null> =
     return null
   }
 
-  // TODO: Process images on upload
+  product.images = product.images.map((image) => {
+    return image.includes('cloudinary') ? image : `${process.env.NEXT_PUBLIC_SITE_URL}/products/${image}`
+  })
 
   return JSON.parse(JSON.stringify(product))
 }
@@ -33,14 +35,30 @@ export const getProductsByTerm = async (term: string): Promise<IProduct[]> => {
   const products = await Product.find({ $text: { $search: term } })
     .select('title images price slug inStock -_id')
     .lean()
+
+  const updatedProducts = products.map((product) => {
+    product.images = product.images.map((image) => {
+      return image.includes('cloudinary') ? image : `${process.env.NEXT_PUBLIC_SITE_URL}/products/${image}`
+    })
+    return product
+  })
+
   await db.disconnect()
 
-  return products
+  return updatedProducts
 }
 
 export const getAllProducts = async (): Promise<IProduct[]> => {
   await db.connect()
   const products = await Product.find().lean()
   await db.disconnect()
-  return JSON.parse(JSON.stringify(products))
+
+  const updatedProducts = products.map((product) => {
+    product.images = product.images.map((image) => {
+      return image.includes('cloudinary') ? image : `${process.env.NEXT_PUBLIC_SITE_URL}/products/${image}`
+    })
+    return product
+  })
+
+  return JSON.parse(JSON.stringify(updatedProducts))
 }

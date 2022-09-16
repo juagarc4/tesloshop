@@ -340,14 +340,21 @@ const ProductAdminPage: FC<Props> = ({ product }) => {
                 style={{ display: 'none' }}
                 onChange={onFilesSelected}
               />
-
-              <Chip label='You need at least 2 images' color='error' variant='outlined' />
-
+              {getValues('images').length < 2 && (
+                <Chip label='You need at least 2 images' color='error' variant='outlined' />
+              )}
+              {/* Version 2:
+              <Chip
+                label='You need at least 2 images'
+                color='error'
+                variant='outlined'
+                sx={{ display: getValues('images').length < 2 ? 'flex' : 'none' }}
+              />*/}
               <Grid container spacing={2}>
                 {getValues('images').map((img) => (
                   <Grid item xs={4} sm={3} key={img}>
                     <Card>
-                      <CardMedia component='img' className='fadeIn' image={`/products/${img}`} alt={img} />
+                      <CardMedia component='img' className='fadeIn' image={`${img}`} alt={img} />
                       <CardActions>
                         <Button fullWidth color='error' onClick={() => onDeleteImage(img)}>
                           Delete

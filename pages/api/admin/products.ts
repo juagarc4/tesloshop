@@ -32,8 +32,13 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const products = await Product.find().sort({ title: 'asc' }).lean()
   await db.disconnect()
 
-  return res.status(200).json(products)
-  // TODO: Update images
+  const updatedProducts = products.map((product) => {
+    product.images = product.images.map((image) => {
+      return image.includes('cloudinary') ? image : `${process.env.NEXT_PUBLIC_SITE_URL}/products/${image}`
+    })
+    return product
+  })
+  return res.status(200).json(updatedProducts)
 }
 const updateProdct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { _id = '', images = [] } = req.body as IProduct
@@ -55,7 +60,6 @@ const updateProdct = async (req: NextApiRequest, res: NextApiResponse<Data>) => 
       await db.disconnect()
       return res.status(400).json({ message: 'Product does not exist' })
     }
-    //TODO: Remove images in Cloudinary
     product.images.forEach(async (image) => {
       if (!images.includes(image)) {
         const [fileId, extension] = image.substring(image.lastIndexOf('/') + 1).split('.')
