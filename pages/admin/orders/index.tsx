@@ -28,7 +28,7 @@ const columns: GridColDef[] = [
     sortable: false,
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <a target='_blank' href={`/admin/orders/${row.id}`}>
+        <a target='_blank' rel='noreferrer' href={`/admin/orders/${row.id}`}>
           {row.link}
         </a>
       )

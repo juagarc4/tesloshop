@@ -12,7 +12,7 @@ const columns: GridColDef[] = [
     headerName: 'Image',
     renderCell: ({ row }: GridValueGetterParams) => {
       return (
-        <a target='_blank' href={`/product/${row.slug}`} rel='noreferer'>
+        <a target='_blank' rel='noreferrer' href={`/product/${row.slug}`} rel='noreferer'>
           <CardMedia alt={row.title} className='fadeIn' image={row.img} component='img' sx={{ borderRadius: '5px' }} />
         </a>
       )
